@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+  <title>Blockwise</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand" role="img" aria-label="Blockwise">
+      <img class="brand-symbol" src="../../assets/brand/blockwise-symbol-orange.svg" alt="">
+      <img class="brand-word light" src="../../assets/brand/blockwise-wordmark-charcoal.svg" alt="">
+      <img class="brand-word dark" src="../../assets/brand/blockwise-wordmark-white.svg" alt="">
+    </div>
+    <nav id="tabs" aria-label="Views">
+      <button data-view="now">Now</button>
+      <button data-view="week">Week</button>
+      <button data-view="edit">Edit</button>
+      <button data-view="journal">Journal</button>
+      <button data-view="settings">Settings</button>
+    </nav>
+    <div class="top-right">
+      <span id="clock" class="clock"></span>
+      <button id="mini-btn" class="btn ghost small" title="Floating always-on-top timer">Mini timer</button>
+    </div>
+  </header>
+  <main id="view"></main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

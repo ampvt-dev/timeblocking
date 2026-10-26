@@ -56,7 +56,9 @@ function createMainWindow() {
   mainWin.removeMenu?.();
   mainWin.loadFile(path.join(root, 'src', 'renderer', 'index.html'));
   mainWin.once('ready-to-show', () => {
-    if (!process.argv.includes('--hidden')) mainWin.show();
+    // Started at login: stay in the menu bar / tray (--hidden on Windows, login item flag on macOS).
+    const atLogin = process.argv.includes('--hidden') || (isMac && app.getLoginItemSettings().wasOpenedAtLogin);
+    if (!atLogin) mainWin.show();
   });
   // Closing the window hides it; the app keeps running in the menu bar / tray.
   mainWin.on('close', (e) => {

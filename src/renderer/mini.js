@@ -16,6 +16,3 @@ window.api.onMiniState((state) => {
 for (const b of document.querySelectorAll('button[data-action]')) {
   b.addEventListener('click', () => window.api.miniAction(b.dataset.action));
 }
-$('mini').addEventListener('dblclick', (e) => {
-  if (!e.target.closest('button')) window.api.miniAction('open');
-});

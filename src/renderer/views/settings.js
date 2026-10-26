@@ -159,7 +159,7 @@ export function render(ctx, params) {
     dataPath.textContent = info.dataDir;
   });
   el.append(section('App',
-    h('label', { class: 'check' }, loginBox, h('span', null, 'Start Blockwise when I log in', h('small', { class: 'muted block' }, 'Starts hidden in the menu bar / tray.'))),
+    h('label', { class: 'check' }, loginBox, h('span', null, 'Start Blockwise when I log in')),
     check(ctx, 'menuBarCountdown', 'Show the current block and time left in the menu bar (Mac)', 'On Windows, hover the tray icon or use the Mini timer.'),
     check(ctx, 'journalPrompt', 'Open the journal when the last block of the day ends'),
   ));

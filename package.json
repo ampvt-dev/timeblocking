@@ -24,7 +24,8 @@
     "dist:mac": "electron-builder --mac",
     "dist:win": "electron-builder --win",
     "icons": "node scripts/make-icons.js",
-    "test:e2e": "node test/e2e.mjs"
+    "test:e2e": "node test/e2e.mjs",
+    "templates": "node scripts/make-templates.js"
   },
   "overrides": {
     "uuid": "^11.1.1"

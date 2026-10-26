@@ -256,7 +256,14 @@ export function scheduleToSheets(schedule, { blank = false, from = 7 * 60, to = 
   // Blocks: one row per title, or per title+day when the category differs by day.
   const blockRows = [['Title', 'Category', 'Day', 'Notes', 'Alerts']];
   if (blank) {
-    blockRows.push(['Inbox', 'General', '', '', ''], ['Lunch', 'General', '', 'Upon request', 'quiet']);
+    // Example rows; people replace them with their own block titles.
+    const cats = schedule.categories.map((c) => c.name);
+    const pick = (re, fallback) => cats.find((n) => re.test(n)) || fallback;
+    blockRows.push(
+      ['Deep work', pick(/focus|deep|estimat/i, cats[0]), '', 'Phone on silent', ''],
+      ['Team meeting', pick(/meet|coord/i, cats[0]), '', '', ''],
+      ['Lunch', pick(/break|lunch|buffer/i, cats.at(-1)), '', '', ''],
+    );
   } else {
     const byTitle = new Map();
     for (const d of days) {
@@ -293,32 +300,52 @@ export function scheduleToSheets(schedule, { blank = false, from = 7 * 60, to = 
   const info = [['Name', schedule.name], ['Subtitle', schedule.subtitle || '']];
 
   const help = [
-    ['How to use this spreadsheet'],
+    ['How to set up your week'],
     [''],
-    ['Week sheet'],
-    ['• Column A is the start time of each row. Rows are usually 30 minutes apart; any even interval works (15, 30, 60).'],
-    ['• The last row is the end of the day — leave its cells empty.'],
-    ['• Type a block title in a cell. To make it longer, merge cells downward or repeat the same title in the cells below.'],
-    ['• Optional notes go on new lines in the same cell (Alt+Enter on Windows, Ctrl+Option+Enter on Mac).'],
-    ['• Leave a cell empty for free time.'],
-    ['• Columns can be any days: Monday … Sunday. Remove columns you don\'t use.'],
-    ['• Times like 1:00 that come after 12:30 are read as PM. Use "1:00 PM" or 13:00 to be explicit.'],
+    ['1. Week sheet: build the grid'],
+    ['• Each row starts at the time in column A (30 minutes apart). The last row is the end of the day; leave its cells empty.'],
+    ['• Type a block title in the cell where it starts, e.g. "Deep work" in Monday at 9:00 AM.'],
+    ['• To make a block longer, merge the cells below it, or type the same title again in each cell below.'],
+    ['   Excel: select the cells, then Home → Merge & Center → Merge Cells.'],
+    ['   Google Sheets: select the cells, then Format → Merge cells → Merge vertically.'],
+    ['• Optional notes go on a new line inside the same cell. They show under the title on the focus screen.'],
+    ['   Excel for Windows: Alt+Enter.  Excel for Mac: Control+Option+Return.  Google Sheets: Ctrl+Enter (Windows) or ⌘+Enter (Mac).'],
+    ['• Leave a cell empty for free time. Coloring cells is optional; colors come from the Categories sheet.'],
+    ['• Need Saturday or Sunday? Add a column with that day\'s name. Delete columns for days you don\'t use.'],
+    ['• Need 15-minute rows? Change the times in column A (e.g. 9:00, 9:15, 9:30). Any even interval works.'],
+    ['• Times like 1:00 after 12:30 are read as PM. You can also write 1:00 PM or 13:00.'],
     [''],
-    ['Blocks sheet (optional)'],
-    ['• Gives a block a category by title. Fill in Day only if the same title needs a different category on some days.'],
-    ['• Alerts: full (chime + voice + notification), quiet (notification only), off (silent). Blank = use the category\'s setting.'],
+    ['2. Categories sheet: kinds of blocks'],
+    ['• Name, Color (hex code like #F2B774), Alerts, and an optional Focus note shown during those blocks (e.g. "Slack or text first unless urgent").'],
+    ['• Alerts: full = chime + voice + notification, quiet = notification only, off = silent.'],
     [''],
-    ['Categories sheet (optional)'],
-    ['• Name, color (hex like #f2b774), default alerts, and an optional focus note shown during that category\'s blocks.'],
+    ['3. Blocks sheet: link titles to categories'],
+    ['• One row per block title from the Week sheet, with its Category (pick from the dropdown).'],
+    ['• Fill in Day only if the same title should use a different category on certain days.'],
+    ['• Alerts here override the category for that block. Leave blank to use the category\'s setting.'],
+    ['• Titles not listed here use the first category. You can change it in the app afterwards.'],
     [''],
-    ['Import this file from the app: Settings → Schedule → Import.'],
+    ['4. Info sheet: your schedule\'s name and subtitle (shown at the top of the Week view).'],
+    [''],
+    ['5. Import into Blockwise'],
+    ['• Excel: save as .xlsx.'],
+    ['• Google Sheets: File → Download → Microsoft Excel (.xlsx). Don\'t use CSV here; CSV loses merged cells and the extra sheets.'],
+    ['• In Blockwise: Settings → Schedule → Import…, then pick the file. Review the summary and confirm.'],
+    ['• Importing replaces your weekly template. Your journal and one-off date changes are kept.'],
+  ];
+
+  const list = (values) => `"${values.join(',')}"`;
+  const blockValidations = [
+    { range: [1, 1, 199, 1], list: 'Categories!$A$2:$A$60' },
+    { range: [1, 2, 199, 2], list: list(WEEK_ORDER.map((d) => DAY_NAMES[d])) },
+    { range: [1, 4, 199, 4], list: list(['full', 'quiet', 'off']) },
   ];
 
   return [
+    { name: 'How to use', rows: help, colWidths: [110], wrap: true, headingRows: help.flatMap((r, i) => (/^(How to|\d\.)/.test(r[0]) ? [i] : [])) },
     weekSheet,
-    { name: 'Blocks', rows: blockRows, fills: blockFills, colWidths: [28, 26, 12, 36, 10], headerRow: true },
-    { name: 'Categories', rows: catRows, fills: catFills, colWidths: [28, 12, 10, 48], headerRow: true },
+    { name: 'Blocks', rows: blockRows, fills: blockFills, colWidths: [28, 26, 12, 36, 10], headerRow: true, validations: blockValidations },
+    { name: 'Categories', rows: catRows, fills: catFills, colWidths: [28, 12, 10, 48], headerRow: true, validations: [{ range: [1, 2, 59, 2], list: list(['full', 'quiet', 'off']) }] },
     { name: 'Info', rows: info, colWidths: [12, 80] },
-    { name: 'How to use', rows: help, colWidths: [110] },
   ];
 }

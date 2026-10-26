@@ -172,7 +172,9 @@ test('grid import reads Excel time cells', () => {
 
 test('blank template has no blocks and imports cleanly', () => {
   const sheets = scheduleToSheets(sampleSchedule(), { blank: true });
-  assert.equal(sheets[0].rows.length, 1 + (18 * 60 - 7 * 60) / 30 + 1);
+  const week = sheets.find((x) => x.name === 'Week');
+  assert.equal(week.rows.length, 1 + (18 * 60 - 7 * 60) / 30 + 1);
+  assert.deepEqual(sheets.find((x) => x.name === 'How to use').headingRows.length, 6);
   const { schedule } = sheetsToSchedule(sheets);
   assert.equal(Object.values(schedule.days).flat().length, 0);
 });

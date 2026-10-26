@@ -31,6 +31,7 @@ export async function readXlsx(filePath) {
   });
 }
 
+const a1 = (r, c) => `${String.fromCharCode(65 + c)}${r + 1}`;
 const argb = (hex) => `FF${hex.replace('#', '').toUpperCase()}`;
 
 export async function writeXlsx(filePath, sheets) {
@@ -59,6 +60,12 @@ export async function writeXlsx(filePath, sheets) {
       });
       if (spec.headerRow && r === 1) row.font = { bold: true };
     });
+    for (const r of spec.headingRows || []) ws.getRow(r + 1).font = { bold: true, size: r === 0 ? 14 : 12 };
+    // Dropdown lists; [r1, c1, r2, c2] are 0-based and inclusive. Added as one
+    // range each: per-cell validations get merged into overlapping ranges.
+    for (const { range: [r1, c1, r2, c2], list } of spec.validations || []) {
+      ws.dataValidations.add(`${a1(r1, c1)}:${a1(r2, c2)}`, { type: 'list', allowBlank: true, formulae: [list] });
+    }
     if (spec.freeze) ws.views = [{ state: 'frozen', xSplit: spec.freeze.col, ySplit: spec.freeze.row }];
   }
   await wb.xlsx.writeFile(filePath);

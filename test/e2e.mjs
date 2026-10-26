@@ -14,7 +14,7 @@ import { fromMin, dateKey } from '../src/core/time.js';
 const require = createRequire(import.meta.url);
 const { _electron } = require('playwright-core');
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'timeblock-e2e-'));
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'blockwise-e2e-'));
 const dataDir = path.join(tmp, 'data');
 
 let failed = 0;

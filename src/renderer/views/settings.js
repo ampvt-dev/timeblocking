@@ -62,14 +62,14 @@ async function doImport(ctx) {
 }
 
 async function exportSheet(ctx, blank) {
-  const name = blank ? 'timeblock-template.xlsx' : `${slug(ctx.schedule.name) || 'schedule'}.xlsx`;
+  const name = blank ? 'blockwise-template.xlsx' : `${slug(ctx.schedule.name) || 'schedule'}.xlsx`;
   const path = await ctx.api.exportFile({ format: 'xlsx', defaultName: name, sheets: scheduleToSheets(ctx.schedule, { blank }) });
   if (path) toast(`Saved ${path}`);
 }
 
 async function backup(ctx) {
-  const data = { app: 'timeblock', exportedAt: new Date().toISOString(), schedule: ctx.schedule, journal: ctx.journal, settings: ctx.settings };
-  const path = await ctx.api.exportFile({ format: 'json', defaultName: `timeblock-backup-${dateKey(new Date())}.json`, text: JSON.stringify(data, null, 2) });
+  const data = { app: 'blockwise', exportedAt: new Date().toISOString(), schedule: ctx.schedule, journal: ctx.journal, settings: ctx.settings };
+  const path = await ctx.api.exportFile({ format: 'json', defaultName: `blockwise-backup-${dateKey(new Date())}.json`, text: JSON.stringify(data, null, 2) });
   if (path) toast(`Saved ${path}`);
 }
 
@@ -159,7 +159,7 @@ export function render(ctx, params) {
     dataPath.textContent = info.dataDir;
   });
   el.append(section('App',
-    h('label', { class: 'check' }, loginBox, h('span', null, 'Start Timeblock when I log in', h('small', { class: 'muted block' }, 'Starts hidden in the menu bar / tray.'))),
+    h('label', { class: 'check' }, loginBox, h('span', null, 'Start Blockwise when I log in', h('small', { class: 'muted block' }, 'Starts hidden in the menu bar / tray.'))),
     check(ctx, 'menuBarCountdown', 'Show the current block and time left in the menu bar (Mac)', 'On Windows, hover the tray icon or use the Mini timer.'),
     check(ctx, 'journalPrompt', 'Open the journal when the last block of the day ends'),
   ));

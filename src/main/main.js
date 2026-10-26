@@ -4,7 +4,7 @@
 // which keeps running while the window is hidden. It publishes its state here
 // so the tray and the floating mini timer can show it.
 
-import { app, BrowserWindow, Tray, Menu, Notification, ipcMain, dialog, nativeImage, shell, powerMonitor, screen } from 'electron';
+import { app, BrowserWindow, Tray, Menu, Notification, ipcMain, dialog, nativeImage, nativeTheme, shell, powerMonitor, screen } from 'electron';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -16,9 +16,11 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(here, '..', '..');
 const asset = (name) => path.join(root, 'assets', name);
 const isMac = process.platform === 'darwin';
+// macOS icons sit on Apple's icon grid (transparent margin); Windows uses the full tile.
+const appIcon = asset(isMac ? 'icon.png' : 'icon-win.png');
 
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
-app.setAppUserModelId('com.convergesigns.timeblock');
+app.setAppUserModelId('com.convergesigns.blockwise');
 
 if (!app.requestSingleInstanceLock()) app.quit();
 
@@ -46,9 +48,9 @@ function createMainWindow() {
     minWidth: 780,
     minHeight: 560,
     show: false,
-    title: 'Timeblock',
-    backgroundColor: '#f7f7f4',
-    icon: asset('icon.png'),
+    title: 'Blockwise',
+    backgroundColor: nativeTheme.shouldUseDarkColors ? '#202426' : '#faf8f3',
+    icon: appIcon,
     webPreferences,
   });
   mainWin.removeMenu?.();
@@ -94,7 +96,7 @@ function createMiniWindow() {
     skipTaskbar: true,
     alwaysOnTop: true,
     show: false,
-    backgroundColor: '#1b2430',
+    backgroundColor: '#202426',
     webPreferences,
   });
   miniWin.setAlwaysOnTop(true, 'floating');
@@ -137,7 +139,7 @@ function rebuildTrayMenu(force = false) {
   if (!force && key === lastMenuKey) return;
   lastMenuKey = key;
   const menu = Menu.buildFromTemplate([
-    { label: s.nowLabel || 'Timeblock', enabled: false },
+    { label: s.nowLabel || 'Blockwise', enabled: false },
     ...(s.nextLabel ? [{ label: s.nextLabel, enabled: false }] : []),
     { type: 'separator' },
     {
@@ -147,18 +149,18 @@ function rebuildTrayMenu(force = false) {
     },
     { label: 'Skip to next block', enabled: Boolean(s.canAdjust), click: () => sendAction('skip') },
     { type: 'separator' },
-    { label: 'Show Timeblock', click: () => showMain('now') },
+    { label: 'Show Blockwise', click: () => showMain('now') },
     { label: 'Mini timer', type: 'checkbox', checked: Boolean(miniWin), click: (item) => setMini(item.checked) },
     { label: "Today's journal", click: () => showMain('journal') },
     { type: 'separator' },
-    { label: 'Quit Timeblock', click: () => { quitting = true; app.quit(); } },
+    { label: 'Quit Blockwise', click: () => { quitting = true; app.quit(); } },
   ]);
   tray.setContextMenu(menu);
 }
 
 function createTray() {
   tray = new Tray(trayImage());
-  tray.setToolTip('Timeblock');
+  tray.setToolTip('Blockwise');
   // Windows: left-click opens the app; the menu is on right-click.
   if (!isMac) tray.on('click', () => showMain());
   rebuildTrayMenu(true);
@@ -214,7 +216,7 @@ ipcMain.on('state', (_e, state) => {
   lastState = state;
   if (tray) {
     if (isMac) tray.setTitle(state.trayTitle || '', { fontType: 'monospacedDigit' });
-    tray.setToolTip(state.tooltip || 'Timeblock');
+    tray.setToolTip(state.tooltip || 'Blockwise');
     rebuildTrayMenu();
   }
   if (miniWin && !miniWin.isDestroyed()) miniWin.webContents.send('mini:state', state);
@@ -248,7 +250,7 @@ app.on('window-all-closed', () => {
 });
 
 app.whenReady().then(() => {
-  if (isMac) app.dock?.setIcon(nativeImage.createFromPath(asset('icon.png')));
+  if (isMac) app.dock?.setIcon(nativeImage.createFromPath(appIcon));
   createMainWindow();
   createTray();
   powerMonitor.on('resume', () => mainWin?.webContents.send('power:resume'));

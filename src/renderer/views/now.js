@@ -9,16 +9,13 @@ const range = (b) => `${label12(toMin(b.start))} – ${label12(toMin(b.end))}`;
 function welcome(ctx) {
   const done = () => ctx.setSettings({ onboarded: true }, { render: true });
   return h('div', { class: 'welcome card' },
-    h('h2', null, 'Welcome to Timeblock'),
-    h('p', null, 'It shows the block you should be in, counts it down, and chimes, speaks and notifies when it\'s time to switch. Close the window and it keeps running in the menu bar (Mac) or system tray (Windows).'),
-    h('p', null, `It's loaded with a sample week ("${ctx.schedule.name}"). Keep it, or bring your own:`),
+    h('h2', null, 'Make time for what matters.'),
+    h('p', null, 'Blockwise shows the block you\'re in, counts it down, and chimes and speaks when it\'s time to switch. Close the window and it keeps running in the menu bar (Mac) or system tray (Windows).'),
+    h('p', null, `Your week is loaded from "${ctx.schedule.name}". Keep it, or bring your own.`),
     h('div', { class: 'row gap' },
-      h('button', { class: 'btn primary', onClick: done }, 'Use this schedule'),
+      h('button', { class: 'btn primary', onClick: done }, 'Use this week'),
       h('button', { class: 'btn', onClick: () => { done(); ctx.go('settings', { focus: 'schedule' }); } }, 'Import a spreadsheet…'),
-      h('button', {
-        class: 'btn',
-        onClick: () => { done(); ctx.go('edit'); },
-      }, 'Build it in the editor'),
+      h('button', { class: 'btn', onClick: () => { done(); ctx.go('edit'); } }, 'Plan your week in the editor'),
     ),
   );
 }

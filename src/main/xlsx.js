@@ -35,7 +35,7 @@ const argb = (hex) => `FF${hex.replace('#', '').toUpperCase()}`;
 
 export async function writeXlsx(filePath, sheets) {
   const wb = new ExcelJS.Workbook();
-  wb.creator = 'Timeblock';
+  wb.creator = 'Blockwise';
   for (const spec of sheets) {
     const ws = wb.addWorksheet(spec.name);
     spec.rows.forEach((r, ri) => {

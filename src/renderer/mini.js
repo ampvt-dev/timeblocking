@@ -4,7 +4,7 @@ const $ = (id) => document.getElementById(id);
 
 window.api.onMiniState((state) => {
   const m = state.mini || {};
-  $('headline').textContent = m.headline || 'Timeblock';
+  $('headline').textContent = m.headline || 'Blockwise';
   $('sub').textContent = [m.sub, m.nextLabel].filter(Boolean).join(' · ');
   $('count').textContent = m.countdown || '';
   $('stripe').style.background = m.color || '#dbe6f4';

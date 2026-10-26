@@ -20,7 +20,7 @@ export const ALERT_LABELS = {
   off: 'Silent',
 };
 
-const PALETTE = ['#dbe6f4', '#fde6cc', '#f2b774', '#a9dccf', '#e5dcf2', '#efefeb', '#f6d3d3', '#d6ecc4', '#fff1a8'];
+const PALETTE = ['#f7d7c7', '#dbe6f4', '#f2b774', '#a9dccf', '#e5dcf2', '#efefeb', '#f6d3d3', '#d6ecc4', '#fff1a8'];
 
 export function newId() {
   return Math.random().toString(36).slice(2, 10);

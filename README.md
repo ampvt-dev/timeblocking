@@ -1,6 +1,8 @@
-# Timeblock
+# Blockwise
 
-A desktop focus timer for time-blocked days (macOS and Windows). It shows the
+*Make time for what matters.*
+
+Time blocking for macOS and Windows. It shows the
 block you should be in, counts it down, and chimes, speaks and notifies when
 it's time to switch. Each person imports or builds their own week.
 
@@ -31,17 +33,17 @@ The sample week loaded on first launch is Hunter's (Converge Signs).
 Installers are built by GitHub Actions. You can get them in two ways:
 
 - **Tagged releases.** Push a tag like `v0.1.0`. A draft GitHub Release is
-  created with `Timeblock-<version>-mac-universal.dmg` and
-  `Timeblock-<version>-win-x64.exe`.
+  created with `Blockwise-<version>-mac-universal.dmg` and
+  `Blockwise-<version>-win-x64.exe`.
 - **Any CI run that built installers.** Open the run under *Actions* and
-  download the `timeblock-macOS` or `timeblock-Windows` artifact.
+  download the `blockwise-macOS` or `blockwise-Windows` artifact.
 
 The builds are **not code-signed**, so the first launch needs one extra step:
 
-- **macOS**: open the .dmg and drag Timeblock to Applications. Open it once. When
+- **macOS**: open the .dmg and drag Blockwise to Applications. Open it once. When
   macOS blocks it, go to *System Settings → Privacy & Security* and click
   **Open Anyway**. If macOS says the app is "damaged", run
-  `xattr -cr /Applications/Timeblock.app` in Terminal and open it again.
+  `xattr -cr /Applications/Blockwise.app` in Terminal and open it again.
 - **Windows**: when SmartScreen shows "Windows protected your PC", click
   **More info → Run anyway**.
 
@@ -75,10 +77,20 @@ Importing replaces the weekly template. The journal and custom dates are kept.
 Everything is stored locally as JSON (`schedule.json`, `settings.json`,
 `journal.json`):
 
-- macOS: `~/Library/Application Support/Timeblock/data`
-- Windows: `%APPDATA%\Timeblock\data`
+- macOS: `~/Library/Application Support/Blockwise/data`
+- Windows: `%APPDATA%\Blockwise\data`
 
 *Settings → Back up everything* writes one JSON file, and importing that file restores it.
+
+## Brand
+
+The Blockwise identity (the logo, the Ember/Charcoal/Ivory/Peach/Slate palette, and Inter)
+is described in `docs/brand-guidelines.md`. The vector masters are in `assets/brand/`.
+`npm run icons` renders every app and tray icon from those SVGs: the macOS icon on
+Apple's grid, the full-bleed Windows tile, and a monochrome B for the menu bar.
+Inter (SIL Open Font License, `src/renderer/fonts/LICENSE.txt`) is bundled for the UI.
+Ember marks focus and selected states. Small text stays Charcoal or a slightly
+darker Slate (`#646c73`) so it meets WCAG AA contrast on Ivory.
 
 ## Development
 

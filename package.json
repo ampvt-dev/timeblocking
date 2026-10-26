@@ -1,7 +1,8 @@
 {
-  "name": "timeblock",
+  "name": "blockwise",
   "private": true,
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "electron": "^45.0.0",
     "electron-builder": "^26.18.0",
     "playwright-core": "^1.63.0"
@@ -9,9 +10,9 @@
   "dependencies": {
     "exceljs": "^4.4.0"
   },
-  "productName": "Timeblock",
+  "productName": "Blockwise",
   "version": "0.1.0",
-  "description": "Time-block focus timer: shows your current block, chimes and announces transitions.",
+  "description": "Blockwise: time blocking for macOS and Windows. Shows your current block, counts it down, and chimes and speaks at each transition.",
   "type": "module",
   "main": "src/main/main.js",
   "author": "Converge Signs",
@@ -29,8 +30,8 @@
     "uuid": "^11.1.1"
   },
   "build": {
-    "appId": "com.convergesigns.timeblock",
-    "productName": "Timeblock",
+    "appId": "com.convergesigns.blockwise",
+    "productName": "Blockwise",
     "copyright": "Converge Signs",
     "files": [
       "src/**/*",
@@ -56,7 +57,7 @@
       "hardenedRuntime": false
     },
     "dmg": {
-      "title": "Timeblock ${version}"
+      "title": "Blockwise ${version}"
     },
     "win": {
       "target": [
@@ -66,14 +67,15 @@
             "x64"
           ]
         }
-      ]
+      ],
+      "icon": "build/icon-win.png"
     },
     "nsis": {
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "shortcutName": "Timeblock"
+      "shortcutName": "Blockwise"
     },
     "publish": null
   }

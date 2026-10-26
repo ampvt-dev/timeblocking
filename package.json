@@ -52,7 +52,8 @@
         }
       ],
       "category": "public.app-category.productivity",
-      "identity": "-"
+      "identity": "-",
+      "hardenedRuntime": false
     },
     "dmg": {
       "title": "Timeblock ${version}"

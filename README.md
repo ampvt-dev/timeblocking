@@ -48,6 +48,9 @@ The builds are **not code-signed**, so the first launch needs one extra step:
 Removing these warnings needs an Apple Developer account ($99/yr, for
 signing and notarization) and a Windows code-signing certificate.
 electron-builder picks both up from CI secrets (`CSC_LINK`, `APPLE_ID`, …).
+Mac builds are ad-hoc signed with hardened runtime off. Turn
+`build.mac.hardenedRuntime` back on when you add a Developer ID; notarization
+requires it.
 
 ## Building your week in a spreadsheet
 

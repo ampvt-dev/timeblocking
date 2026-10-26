@@ -1,4 +1,4 @@
-// End-to-end check of the real Electron app (takes about 2 minutes because it
+// End-to-end check of the real Electron app (takes 2–3 minutes because it
 // waits for real block transitions).
 //   npm run test:e2e
 // On Linux without a display: xvfb-run -a npm run test:e2e
@@ -26,14 +26,17 @@ const check = (ok, msg) => {
 // Today: Estimating until the next minute, then Close out for one minute.
 const now = new Date();
 const m = now.getHours() * 60 + now.getMinutes();
-if (m + 2 >= 24 * 60) throw new Error('Run this before 11:58 PM.');
+// Minutes until the first transition: at least 45 s away, so launching the
+// app (which can include downloading Electron in CI) can't run past it.
+const lead = now.getSeconds() < 15 ? 1 : 2;
+if (m + lead + 1 >= 24 * 60) throw new Error('Run this before 11:57 PM.');
 const schedule = sampleSchedule();
 const today = dateKey(now);
 schedule.exceptions[today] = {
   off: false,
   blocks: [
-    { id: 'A', start: fromMin(Math.max(0, m - 10)), end: fromMin(m + 1), title: 'Estimating', notes: 'Heads-down', category: 'estimating' },
-    { id: 'B', start: fromMin(m + 1), end: fromMin(m + 2), title: 'Close out', notes: '', category: 'buffer' },
+    { id: 'A', start: fromMin(Math.max(0, m - 10)), end: fromMin(m + lead), title: 'Estimating', notes: 'Heads-down', category: 'estimating' },
+    { id: 'B', start: fromMin(m + lead), end: fromMin(m + lead + 1), title: 'Close out', notes: '', category: 'buffer' },
   ],
 };
 fs.mkdirSync(dataDir, { recursive: true });
@@ -75,7 +78,7 @@ try {
 
   const deadline = new Date(now);
   deadline.setSeconds(4, 0);
-  deadline.setMinutes(now.getMinutes() + 2);
+  deadline.setMinutes(now.getMinutes() + lead + 1);
   console.log(`     waiting for block transitions until ${deadline.toLocaleTimeString()}…`);
   while (new Date() < deadline) await win.waitForTimeout(1000);
   const notes = await app.evaluate(() => globalThis.notes);

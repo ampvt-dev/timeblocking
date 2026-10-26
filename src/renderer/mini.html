@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Timeblock mini timer</title>
+  <link rel="stylesheet" href="mini.css">
+</head>
+<body>
+  <div class="mini" id="mini">
+    <div class="stripe" id="stripe"></div>
+    <div class="info">
+      <div class="headline" id="headline">Timeblock</div>
+      <div class="sub" id="sub"></div>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+    </div>
+    <div class="count" id="count"></div>
+    <div class="buttons">
+      <button data-action="extend:5" class="adj" title="Extend 5 minutes">+5</button>
+      <button data-action="extend:10" class="adj" title="Extend 10 minutes">+10</button>
+      <button data-action="skip" class="adj" title="Skip to next block">▸▸</button>
+      <button data-action="open" title="Open Timeblock">⤢</button>
+      <button data-action="close" title="Close mini timer">✕</button>
+    </div>
+  </div>
+  <script src="mini.js"></script>
+</body>
+</html>
